@@ -1,0 +1,8 @@
+{
+  "appId": "com.sidequest.app",
+  "appName": "SideQuest",
+  "webDir": "build",
+  "server": {
+    "androidScheme": "https"
+  }
+}
