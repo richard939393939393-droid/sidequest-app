@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '16'
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -26,6 +26,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
+
+      - name: Fix ajv module issue
+        run: npm install ajv@^8 --legacy-peer-deps
 
       - name: Build React app
         run: npm run build
