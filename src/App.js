@@ -10,7 +10,6 @@ import FirstQuestScreen from "./screens/FirstQuestScreen";
 import { ALL_CHALLENGES } from "./data/data";
 import { supabase } from "./supabaseClient";
 
-// Derive today's quest index from the date — same for all users each day
 function getDailyQuestIndex() {
   if (!ALL_CHALLENGES || ALL_CHALLENGES.length === 0) return 0;
   const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
@@ -107,10 +106,12 @@ export default function App() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
+        height: "100dvh",
+        width: "100%",
         background: "#f8fdf0",
         flexDirection: "column",
         gap: 12,
+        fontFamily: "'Nunito', sans-serif",
       }}
     >
       <div style={{ fontSize: 40 }}>🗺️</div>
@@ -156,50 +157,99 @@ export default function App() {
   }
 
   return (
-    <div className="app-container">
-      <div className="phone-frame">
-        <div className="screen-content">
-          {activeTab === "home" && (
-            <HomeScreen
-              onEarnCoins={handleEarnCoins}
-              onSkipQuest={handleSkipQuest}
-              onProfileUpdate={handleProfileUpdate}
-              currentChallengeIndex={challengeIndex}
-              user={user}
-              profile={profile}
-              coins={coins}
-            />
-          )}
-          {activeTab === "history" && <HistoryScreen user={user} />}
-          {activeTab === "friends" && (
-            <FriendsScreen user={user} profile={profile} />
-          )}
-          {activeTab === "profile" && (
-            <ProfileScreen
-              user={user}
-              profile={profile}
-              onLogout={handleLogout}
-              onProfileUpdate={handleProfileUpdate}
-            />
-          )}
-        </div>
-        <div className="bottom-nav">
-          {[
-            { id: "home", icon: "🏠", label: "Home" },
-            { id: "history", icon: "📋", label: "History" },
-            { id: "friends", icon: "👥", label: "Friends" },
-            { id: "profile", icon: "👤", label: "Profile" },
-          ].map(({ id, icon, label }) => (
-            <button
-              key={id}
-              className={"nav-btn " + (activeTab === id ? "active" : "")}
-              onClick={() => setActiveTab(id)}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100dvh",
+        width: "100%",
+        maxWidth: "100%",
+        background: "#f8fdf0",
+        overflow: "hidden",
+        fontFamily: "'Nunito', sans-serif",
+      }}
+    >
+      {/* Screen content - scrollable */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          overflowX: "hidden",
+          padding: "env(safe-area-inset-top, 16px) 16px 0 16px",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        {activeTab === "home" && (
+          <HomeScreen
+            onEarnCoins={handleEarnCoins}
+            onSkipQuest={handleSkipQuest}
+            onProfileUpdate={handleProfileUpdate}
+            currentChallengeIndex={challengeIndex}
+            user={user}
+            profile={profile}
+            coins={coins}
+          />
+        )}
+        {activeTab === "history" && <HistoryScreen user={user} />}
+        {activeTab === "friends" && (
+          <FriendsScreen user={user} profile={profile} />
+        )}
+        {activeTab === "profile" && (
+          <ProfileScreen
+            user={user}
+            profile={profile}
+            onLogout={handleLogout}
+            onProfileUpdate={handleProfileUpdate}
+          />
+        )}
+      </div>
+
+      {/* Bottom nav - fixed at bottom, respects safe area */}
+      <div
+        style={{
+          display: "flex",
+          borderTop: "1px solid #f0f0f0",
+          background: "#fff",
+          paddingBottom: "env(safe-area-inset-bottom, 8px)",
+          flexShrink: 0,
+        }}
+      >
+        {[
+          { id: "home", icon: "🏠", label: "Home" },
+          { id: "history", icon: "📋", label: "History" },
+          { id: "friends", icon: "👥", label: "Friends" },
+          { id: "profile", icon: "👤", label: "Profile" },
+        ].map(({ id, icon, label }) => (
+          <button
+            key={id}
+            onClick={() => setActiveTab(id)}
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "10px 0",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              gap: 3,
+              color: activeTab === id ? "#58cc02" : "#aaa",
+              fontFamily: "'Nunito', sans-serif",
+            }}
+          >
+            <span style={{ fontSize: 22 }}>{icon}</span>
+            <span
+              style={{
+                fontSize: 10,
+                fontWeight: 800,
+                color: activeTab === id ? "#58cc02" : "#aaa",
+              }}
             >
-              <span>{icon}</span>
-              <span className="nav-label">{label}</span>
-            </button>
-          ))}
-        </div>
+              {label}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   );
