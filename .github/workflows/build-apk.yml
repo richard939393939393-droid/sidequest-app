@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js 22 for Capacitor
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -27,10 +27,17 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      - name: Fix ajv dependency
+        run: |
+          npm install ajv@^8.0.0 --legacy-peer-deps
+          npm install ajv-keywords@^5.0.0 --legacy-peer-deps
+
       - name: Build React app
         run: npm run build
         env:
           CI: false
+          SKIP_PREFLIGHT_CHECK: true
+          NODE_OPTIONS: --openssl-legacy-provider
 
       - name: Install Capacitor
         run: |
