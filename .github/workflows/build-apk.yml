@@ -24,6 +24,22 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Fix styles.css brace balance
+        run: |
+          python3 -c "
+          with open('src/styles.css', 'r') as f:
+              css = f.read()
+          opens = css.count('{')
+          closes = css.count('}')
+          while closes > opens:
+              idx = css.rfind('}')
+              css = css[:idx] + css[idx+1:]
+              closes -= 1
+          with open('src/styles.css', 'w') as f:
+              f.write(css)
+          print(f'CSS fixed: {opens} opens, {closes} closes')
+          "
+
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
