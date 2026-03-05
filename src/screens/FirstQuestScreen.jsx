@@ -67,12 +67,16 @@ export default function FirstQuestScreen({ user, profile, onComplete }) {
       };
       if (photoUrl) updates.avatar_url = photoUrl;
 
-      const { error: profileError } = await supabase
+      const { data: updatedProfile, error: profileError } = await supabase
         .from("profiles")
         .update(updates)
-        .eq("id", user.id);
+        .eq("id", user.id)
+        .select()
+        .single();
 
       if (profileError) throw profileError;
+      if (!updatedProfile?.first_quest_done)
+        throw new Error("Profile update did not save correctly");
 
       // Save to quest_history
       await supabase.from("quest_history").insert({
@@ -86,6 +90,8 @@ export default function FirstQuestScreen({ user, profile, onComplete }) {
       });
 
       setPhase("done");
+      // Auto-advance after 3 seconds as a safety net
+      setTimeout(() => onComplete(), 3000);
     } catch (err) {
       console.error(err);
       setError("Something went wrong saving your quest. Try again.");
