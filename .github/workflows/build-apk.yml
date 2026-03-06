@@ -68,8 +68,8 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
-      - name: Sync Capacitor (force)
-        run: npx cap sync android --force
+      - name: Sync Capacitor
+        run: npx cap sync android
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
