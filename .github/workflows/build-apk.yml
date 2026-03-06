@@ -55,6 +55,11 @@ jobs:
           SKIP_PREFLIGHT_CHECK: true
           NODE_OPTIONS: --openssl-legacy-provider
 
+      - name: Clean previous build artifacts
+        run: |
+          rm -rf android/app/build
+          rm -rf build
+
       - name: Install Capacitor
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
@@ -63,14 +68,18 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
-      - name: Sync Capacitor
-        run: npx cap sync android
+      - name: Sync Capacitor (force)
+        run: npx cap sync android --force
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
+
+      - name: Clean Gradle cache
+        working-directory: android
+        run: ./gradlew clean
 
       - name: Build Debug APK
         working-directory: android
