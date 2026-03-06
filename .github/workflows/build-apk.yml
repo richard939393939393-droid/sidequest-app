@@ -55,15 +55,12 @@ jobs:
           SKIP_PREFLIGHT_CHECK: true
           NODE_OPTIONS: --openssl-legacy-provider
 
-      - name: Clean previous build artifacts
-        run: |
-          rm -rf android/app/build
-          rm -rf build
-
       - name: Install Capacitor
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
-          npx cap init SideQuest com.sidequest.app --web-dir=build
+
+      - name: Initialize Capacitor
+        run: npx cap init SideQuest com.sidequest.app --web-dir=build
 
       - name: Add Android platform
         run: npx cap add android
